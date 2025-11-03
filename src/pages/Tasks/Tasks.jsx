@@ -1,0 +1,94 @@
+import React, { useState, useEffect } from 'react';
+import taskService from '../../services/taskService';
+import useConnection from '../../hooks/useConnection';
+import useStatusLog from '../../hooks/useStatusLog';
+import TasksTable from '../../components/Tasks/TasksTable';
+import TasksHeader from '../../components/Tasks/TasksHeader';
+import './Tasks.css';
+import '../Dashboard/Dashboard.css';
+
+export default function Tasks() {
+  const { addStatus } = useStatusLog();
+  const { connectData, checkStatus } = useConnection({ addStatus });
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (connectData?.username && connectData?.webUrl) {
+      loadTasks();
+    }
+  }, [connectData]);
+
+  useEffect(() => {
+    const init = async () => {
+      await checkStatus();
+    };
+    init();
+  }, []);
+
+  const loadTasks = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+
+      const response = await taskService.getTasks(connectData);
+
+      if (response.ok && response.data) {
+        const tasksArray = Array.isArray(response.data)
+          ? response.data
+          : response.data.tasks || [];
+
+        setTasks(tasksArray);
+      } else {
+        setError('Failed to load tasks');
+        addStatus('Failed to load tasks');
+      }
+    } catch (error) {
+      console.error('Error loading tasks:', error);
+      setError('Error loading tasks');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = async (taskId, userId) => {
+    addStatus(`Canceling task ${taskId}...`);
+
+    try {
+      const response = await taskService.cancelTask(
+        taskId,
+        userId,                   
+        connectData?.username,    
+        connectData?.webUrl       
+      );
+
+      if (response.ok) {
+        addStatus('Task canceled successfully');
+        loadTasks(); 
+      } else {
+        addStatus(response.message || 'Failed to cancel task');
+      }
+    } catch (error) {
+      console.error('Error canceling task:', error);
+      addStatus('Error canceling task');
+    }
+  };
+
+  return (
+    <div className="dashboard">
+      <TasksHeader />
+
+      <div className="tasks-container">
+        <TasksTable
+          tasks={tasks}
+          loading={loading}
+          error={error}
+          onCancel={handleCancel}
+          onRefresh={loadTasks}
+        />
+      </div>
+    </div>
+  );
+}

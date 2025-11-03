@@ -39,27 +39,56 @@ if ( ! function_exists( 'add_action' ) ) {
 
 /**
  * Hook the 'dro_create_menu' function into the 'admin_menu' action.
- * This function is responsible for adding a submenu to the Settings menu.
- * The submenu page will contain the ID of the HTML element that hosts the JSX components.
+ * This function is responsible for adding a main menu item to the WordPress admin sidebar.
+ * The page will contain the ID of the HTML element that hosts the JSX components.
  */
 add_action( 'admin_menu', 'dro_create_menu' );
 
 /**
- * Adds a submenu to the Tools menu.
+ * Adds a main menu item to the WordPress admin sidebar.
  * The page will contain the ID of the HTML element that hosts our JSX components.
  *
  * @return void
  */
 function dro_create_menu() {
-	add_submenu_page(
-		'tools.php',
-		esc_html__( 'WP Plugin Using ReactJS', 'dro-wp-plugin-reactjs' ),
-		esc_html__( 'WP Plugin React', 'dro-wp-plugin-reactjs' ),
-		'manage_options',
-		'dro-wp-plugin-js',
-		'dro_display_menu'
-	);
+    add_menu_page(
+        esc_html__( 'Locomote Admin', 'dro-wp-plugin-reactjs' ),
+        esc_html__( 'Locomote', 'dro-wp-plugin-reactjs' ),
+        'manage_options',
+        'dro-wp-plugin-dashboard',
+        'dro_display_menu',
+        'dashicons-admin-generic',
+        30
+    );
+
+    add_submenu_page(
+        'dro-wp-plugin-dashboard',
+        'Dashboard',
+        'Dashboard',
+        'manage_options',
+        'dro-wp-plugin-dashboard',
+        'dro_display_menu'
+    );
+
+    add_submenu_page(
+        'dro-wp-plugin-dashboard',
+        'Settings',
+        'Settings',
+        'manage_options',
+        'dro-wp-plugin-settings',
+        'dro_display_menu'
+    );
+
+    add_submenu_page(
+        'dro-wp-plugin-dashboard',
+        'Tasks',
+        'Tasks',
+        'manage_options',
+        'dro-wp-plugin-tasks',
+        'dro_display_menu'
+    );
 }
+
 
 
 /**
@@ -104,12 +133,80 @@ function dro_enqueue_script() {
     );
 
     // Localize dynamic settings
+    $current_user = wp_get_current_user();
     wp_localize_script( 'dro-plugin-reactjs', 'wpPluginReactConfig', array(
-        'apiBaseUrl' => get_rest_url(), // Dynamic API Base URL
-        'featureToggles' => array(
-            'enableExperimentalFeature' => true, // Example toggle
+        'apiBaseUrl' => get_rest_url(),
+        'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+        'siteUrl' => get_site_url(),
+        'currentUser' => array(
+            'id' => $current_user ? $current_user->ID : 0,
+            'login' => $current_user ? $current_user->user_login : '',
+            'email' => $current_user ? $current_user->user_email : '',
         ),
-        'appVersion' => '1.0.1', // Dynamic app version
-    ) );	
+        'featureToggles' => array(
+            'enableExperimentalFeature' => true,
+        ),
+        'appVersion' => '1.0.1',
+    ) ); 
+}
+
+/**
+ * AJAX: Generate or fetch an Application Password named "locomote_app" for the current user
+ */
+add_action( 'wp_ajax_locomote_generate_app_password', 'locomote_generate_app_password' );
+function locomote_generate_app_password() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        wp_send_json_error( array( 'message' => 'Unauthorized' ), 403 );
+    }
+
+    if ( ! class_exists( 'WP_Application_Passwords' ) ) {
+        wp_send_json_error( array( 'message' => 'Application Passwords not available' ), 500 );
+    }
+
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        wp_send_json_error( array( 'message' => 'No current user' ), 400 );
+    }
+
+    $app_name = 'locomote_app';
+    $existing_password = '';
+
+    $existing = WP_Application_Passwords::get_user_application_passwords( $user_id );
+    if ( is_array( $existing ) ) {
+        foreach ( $existing as $item ) {
+            if ( isset( $item['name'] ) && $item['name'] === $app_name ) {
+                // We cannot recover the raw password; create a new one to present to the client
+                // Alternatively, delete and recreate to ensure a fresh visible password
+                WP_Application_Passwords::delete_application_password( $user_id, $item['uuid'] );
+                break;
+            }
+        }
+    }
+
+    $created = WP_Application_Passwords::create_new_application_password( $user_id, array( 'name' => $app_name ) );
+    // Core returns array( $new_password, $item )
+    if ( is_wp_error( $created ) || ! is_array( $created ) ) {
+        wp_send_json_error( array( 'message' => 'Failed to create application password' ), 500 );
+    }
+
+    $new_password = '';
+    if ( isset( $created[0] ) && is_string( $created[0] ) ) {
+        $new_password = $created[0];
+    } elseif ( isset( $created['password'] ) ) {
+        $new_password = $created['password'];
+    }
+
+    if ( empty( $new_password ) ) {
+        wp_send_json_error( array( 'message' => 'Could not read generated password' ), 500 );
+    }
+
+    $user = get_user_by( 'id', $user_id );
+    wp_send_json_success( array(
+        'wp_url' => get_site_url(),
+        'wp_username' => $user ? $user->user_login : '',
+        'wp_email' => $user ? $user->user_email : '',
+        'wp_app_password' => $new_password,
+        'app_name' => $app_name,
+    ) );
 }
 

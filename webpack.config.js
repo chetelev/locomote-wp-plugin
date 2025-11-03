@@ -1,13 +1,12 @@
 const path = require("path");
 
 module.exports = (env, argv) => {
-  const mode = argv.mode || "development"; // Default mode is development
+  const mode = argv.mode || "development";
   const isProduction = mode === "production";
 
   return {
     entry: "./app.js",
     output: {
-      // Use different paths for development and production
       path: isProduction
         ? path.resolve(__dirname, "dist/public")
         : path.resolve(__dirname, "public"),
@@ -18,7 +17,7 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
-          test: /\.jsx?$/, // Match both .js and .jsx files
+          test: /\.jsx?$/,
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
@@ -28,10 +27,20 @@ module.exports = (env, argv) => {
             },
           },
         },
+        {
+          test: /\.css$/i,
+          use: ["style-loader", "css-loader"],
+        },
+
+        {
+          test: /\.svg$/i,
+          issuer: /\.[jt]sx?$/,
+          use: ['@svgr/webpack'],
+        },
       ],
     },
     resolve: {
-      extensions: [".js", ".jsx"], // Automatically resolve .js and .jsx files
+      extensions: [".js", ".jsx"],
     },
   };
 };

@@ -2,16 +2,20 @@ import React from "react";
 import DynamicLoader from "../registry/DynamicLoader";
 
 const Container = () => {
-    const componentsToLoad = ["Default","PostFetcher"]; // List of component names to load
+    const params = new URLSearchParams(window.location.search);
+    const page = params.get("page");
 
-    return (
-        <div>
-            <h1>My React Plugin</h1>
-            {componentsToLoad.map((componentName, index) => (
-                <DynamicLoader key={index} componentName={componentName} />
-            ))}
-        </div>
-    );
+    // Map WP admin menu slugs to registered component names
+    const routeMap = {
+        "dro-wp-plugin-dashboard": "Dashboard",
+        "dro-wp-plugin-settings": "Settings",
+        "dro-wp-plugin-tasks": "Tasks",
+    };
+
+    // Fallback to dashboard component if page is unknown
+    const componentToLoad = routeMap[page] || "Dashboard";
+
+    return <DynamicLoader componentName={componentToLoad} />;
 };
 
 export default Container;
