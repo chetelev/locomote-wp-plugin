@@ -1,30 +1,12 @@
 import React from "react";
 import TextAreaField from '../Dashboard/fields/TextAreaField';
-import DateTimeField from '../Dashboard/fields/DateTimeField';
+import Tones from "./Tones";
 
 const Step3 = ({
   formData,
   onFieldChange,
   isConnected
 }) => {
-
-  // Get minimum datetime (5 minutes from now)
-  const getMinDateTime = () => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + 5);
-    return now.toISOString().slice(0, 16);
-  };
-
-  // Validate if a date is at least 5 minutes in the future
-  const isValidDate = (dateString) => {
-    if (!dateString.trim()) return true;
-    const date = new Date(dateString);
-    const now = new Date();
-    const minDateTime = new Date(now.getTime() + 5 * 60 * 1000);
-    return date >= minDateTime;
-  };
-
-  
 
   return (
     <div className="w-full flex flex-col">
@@ -53,6 +35,10 @@ const Step3 = ({
             placeholder="Enter topics and keywords, one per line or separated by commas..."
             required={true}
             rows={6}
+          />
+          <Tones
+            onFieldChange={onFieldChange}
+            selectedTone={formData.toneId}
           />
         </>
       )}
