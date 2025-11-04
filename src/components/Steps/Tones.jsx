@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import apiService from "../../services/apiService";
 
 export default function Tones({ onFieldChange, selectedTone }) {
   const [tones, setTones] = useState([]);
@@ -7,10 +8,15 @@ export default function Tones({ onFieldChange, selectedTone }) {
 
   useEffect(() => {
     const fetchTones = async () => {
+      setLoading(true);
       try {
-        const res = await fetch("http://localhost:3000/api/preferences/get/tones");
-        if (!res.ok) throw new Error("Failed to load tones");
-        const data = await res.json();
+        const url = `${apiService.endpointBase}/preferences/get/tones`;
+        const { ok, data, status } = await apiService.jsonFetch(url);
+
+        if (!ok) {
+          throw new Error(`Failed to load tones (status ${status})`);
+        }
+
         setTones(data);
       } catch (err) {
         console.error("Error fetching tones:", err);
@@ -19,6 +25,7 @@ export default function Tones({ onFieldChange, selectedTone }) {
         setLoading(false);
       }
     };
+
     fetchTones();
   }, []);
 
