@@ -11,8 +11,8 @@ const TextAreaField = ({
   className = ""
 }) => {
   return (
-    <div className={`lc-input-group ${className}`}>
-      <label className="lc-label">
+    <div className={`mb-6 ${className}`}>
+      <label className="mb-2 block text-sm font-semibold text-gray-700">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <textarea
@@ -20,7 +20,7 @@ const TextAreaField = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="lc-textarea"
+        className="w-full min-h-[120px] rounded-md border border-gray-300 px-3 py-2 text-[0.95rem] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         required={required}
         rows={rows}
       />
