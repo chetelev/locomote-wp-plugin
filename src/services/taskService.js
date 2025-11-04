@@ -54,7 +54,7 @@ const cancelTask = async (id, userId, username, webUrl) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        id: id,
+        id: id, // postID
         userId,
         username,
         webUrl

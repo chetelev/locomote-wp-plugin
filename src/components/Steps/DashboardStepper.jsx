@@ -9,8 +9,8 @@ const steps = [
 
 const DashboardStepper = ({ activeStep }) => {
     return (
-        <div className="custom-stepper">
-            <div className="stepper-steps">
+        <div className="mb-12 mx-auto max-w-xl">
+            <div className="flex items-center justify-center gap-2">
                 {steps.map((step, index) => {
                     const isActive = index === activeStep;
                     const isCompleted = index < activeStep;
@@ -18,17 +18,24 @@ const DashboardStepper = ({ activeStep }) => {
 
                     return (
                         <React.Fragment key={step.number}>
-                            <div className="stepper-step">
-                                <div className={`step-badge ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''} ${isInactive ? 'inactive' : ''}`}>
-                                    {isCompleted ? '✓' : step.number}
+                            <div className="flex items-center gap-2">
+                                <div
+                                  className={[
+                                    "w-10 h-10 rounded-full flex items-center justify-center text-base font-semibold shadow",
+                                    isCompleted && "bg-emerald-600 text-white",
+                                    isActive && !isCompleted && "bg-blue-600 text-white",
+                                    isInactive && "bg-gray-200 text-gray-400",
+                                  ].filter(Boolean).join(' ')}
+                                >
+                                  {isCompleted ? '✓' : step.number}
                                 </div>
-                                <div className={`step-label-group ${isActive ? 'active' : ''}`}>
-                                    <span className="step-number-label">{step.shortLabel}</span>
-                                    <span className={`step-title ${isActive ? 'active' : ''}`}>{step.label}</span>
+                                <div className="flex flex-col gap-px">
+                                    <span className={["text-xs font-medium", isActive ? "text-blue-600" : "text-gray-400"].join(' ')}>{step.shortLabel}</span>
+                                    <span className={["text-sm font-semibold", isActive ? "text-gray-900" : "text-gray-400"].join(' ')}>{step.label}</span>
                                 </div>
                             </div>
                             {index < steps.length - 1 && (
-                                <div className={`stepper-line ${isCompleted ? 'completed' : ''}`}></div>
+                                <div className={"w-20 h-0.5 " + (isCompleted ? "bg-blue-600" : "bg-gray-200")}></div>
                             )}
                         </React.Fragment>
                     );

@@ -48,40 +48,40 @@ const DateTimeField = ({
   };
 
   return (
-    <div className={`lc-input-group ${className}`}>
-      <label className="lc-label">
+    <div className={`mb-6 ${className}`}>
+      <label className="mb-2 block text-sm font-semibold text-gray-700">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
-      
-      <div className="lc-datetime-container">
-        <div className="lc-datetime-display">
-          <div className="lc-date-display">
+
+      <div className="flex items-start gap-4">
+        <div className="flex-1 min-w-[200px] rounded-md border border-gray-200 bg-gray-50 p-4">
+          <div className="text-[1.05rem] font-medium text-gray-900 mb-2">
             {value ? formatDisplayDate(value) : 'Select date'}
           </div>
-          <div className="lc-time-display">
+          <div className="text-sm font-medium text-blue-600">
             {value ? formatDisplayTime(value) : 'Select time'}
           </div>
         </div>
-        
-        <div className="lc-datetime-inputs">
+
+        <div className="flex flex-1 gap-3">
           <input
             type="date"
             value={value ? new Date(value).toISOString().slice(0, 10) : ''}
             min={minDateTime ? new Date(minDateTime).toISOString().slice(0, 10) : undefined}
             onChange={handleDateChange}
-            className="lc-date-input"
+            className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-[0.95rem] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
           <input
             type="time"
             value={value ? new Date(value).toTimeString().slice(0, 5) : ''}
             onChange={handleTimeChange}
-            className="lc-time-input"
+            className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-[0.95rem] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
       </div>
-      
+
       {error && (
-        <small className="lc-error">
+        <small className="mt-2 block rounded border-l-4 border-red-600 bg-red-50 px-3 py-2 text-sm text-red-600">
           {error}
         </small>
       )}

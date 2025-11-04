@@ -4,8 +4,7 @@ import useConnection from '../../hooks/useConnection';
 import useStatusLog from '../../hooks/useStatusLog';
 import TasksTable from '../../components/Tasks/TasksTable';
 import TasksHeader from '../../components/Tasks/TasksHeader';
-import './Tasks.css';
-import '../Dashboard/Dashboard.css';
+// Tailwind styles replace previous CSS files
 
 export default function Tasks() {
   const { addStatus } = useStatusLog();
@@ -77,10 +76,10 @@ export default function Tasks() {
   };
 
   return (
-    <div className="dashboard">
+    <div className="min-h-screen bg-gray-50 px-5 py-10">
       <TasksHeader />
 
-      <div className="tasks-container">
+      <div className="mx-auto max-w-[1500px] px-5 py-8">
         <TasksTable
           tasks={tasks}
           loading={loading}

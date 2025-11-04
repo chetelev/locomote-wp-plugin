@@ -24,14 +24,14 @@ const ScheduledDatesField = ({
   };
 
   return (
-    <div className="lc-input-group">
-      <label className="lc-label">
+    <div className="mb-6">
+      <label className="mb-2 block text-sm font-semibold text-gray-700">
         Scheduled Dates <span className="text-red-500">*</span>
       </label>
-      
-      <div className="lc-scheduled-dates">
+
+      <div className="space-y-4">
         {scheduledDates.map((date, index) => (
-          <div key={index} className="lc-date-item">
+          <div key={index} className="flex items-start gap-3">
             <DateTimeField
               name={`date-${index}`}
               value={date}
@@ -39,21 +39,22 @@ const ScheduledDatesField = ({
               minDateTime={getMinDateTime()}
               required={true}
               error={date && !isValidDate(date) ? 'Must be 5+ min in future' : null}
+              className="flex-1"
             />
             <button
               type="button"
               onClick={() => removeDate(index)}
-              className="lc-remove-btn"
+              className="h-10 shrink-0 rounded-full border border-gray-300 px-4 text-sm font-semibold text-gray-700 hover:bg-gray-50"
             >
               Remove
             </button>
           </div>
         ))}
-        
+
         <button
           type="button"
           onClick={addDate}
-          className="lc-add-btn"
+          className="inline-flex items-center rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700"
         >
           + Add New Date
         </button>

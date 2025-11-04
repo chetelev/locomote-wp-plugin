@@ -27,20 +27,20 @@ const Step3 = ({
   
 
   return (
-    <div className="lc-step-content">
-      <div className="icon-circle">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '40px', height: '40px', color: '#2563eb' }}>
+    <div className="w-full flex flex-col">
+      <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-10 w-10 text-blue-600">
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
           <circle cx="12" cy="10" r="3" />
         </svg>
       </div>
-      <h3>Task Details</h3>
-      <p className="description">
+      <h3 className="mb-3 text-center text-xl font-semibold text-gray-900">Task Details</h3>
+      <p className="mx-auto mb-8 max-w-[450px] text-center text-sm leading-6 text-gray-500">
         Specify the topics and keywords for your automated publishing task.
       </p>
 
       {!isConnected ? (
-        <div className="lc-not-connected">
+        <div className="rounded-md border border-emerald-200 bg-emerald-50 px-6 py-4 text-emerald-700 text-center font-medium">
           ⚠️ Please connect first to schedule tasks.
         </div>
       ) : (

@@ -6,9 +6,7 @@ const Step4 = ({
   isConnected
 }) => {
   return (
-        <div className="step4-container">
-          Step4
-        </div>
+        <div className="text-center text-gray-700">Step4</div>
       
   );
 };

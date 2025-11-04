@@ -18,30 +18,31 @@ const Step2 = ({
     ];
 
     return (
-        <div className="lc-step-content">
-            <div className="icon-circle">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '40px', height: '40px', color: '#2563eb' }}>
+        <div className="w-full flex flex-col">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-10 w-10 text-blue-600">
                     <circle cx="12" cy="12" r="10" />
                     <path d="M12 6v6l4 2" />
                 </svg>
             </div>
-            <h3>Publishing Schedule</h3>
-            <p className="description">
+            <h3 className="mb-3 text-center text-xl font-semibold text-gray-900">Publishing Schedule</h3>
+            <p className="mx-auto mb-8 max-w-[450px] text-center text-sm leading-6 text-gray-500">
                 Select the days you want content to be published.
             </p>
 
-            <div className="days-grid">
-                <label className="days-label">Select Days</label>
-                <div className="days-checkboxes">
+            <div>
+                <label className="mb-4 block text-sm font-semibold text-gray-700">Select Days</label>
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
                     {days.map(day => (
-                        <div key={day.key} className="day-checkbox-item">
+                        <div key={day.key} className="flex items-center gap-3 rounded-lg px-4 py-3 transition hover:bg-gray-50">
                             <input
                                 type="checkbox"
                                 id={day.key}
                                 checked={formData.days[day.key]}
                                 onChange={() => onDayChange(day.key)}
+                                className="h-5 w-5 rounded accent-blue-600"
                             />
-                            <label htmlFor={day.key}>
+                            <label htmlFor={day.key} className="cursor-pointer select-none text-sm font-medium text-gray-700">
                                 {day.label}
                             </label>
                         </div>
@@ -58,15 +59,16 @@ const Step2 = ({
                 required={true}
             />
 
-            <div className="lc-checkbox-wrapper">
+            <div className="mt-4 flex items-center gap-3">
                 <input
                     type="checkbox"
                     name="startImmediately"
                     checked={formData.startImmediately}
                     onChange={onFieldChange}
                     id="startImmediately"
+                    className="h-5 w-5 rounded accent-blue-600"
                 />
-                <label htmlFor="startImmediately">
+                <label htmlFor="startImmediately" className="cursor-pointer select-none text-[15px] font-medium text-gray-900">
                     Start scheduling immediately
                 </label>
             </div>
