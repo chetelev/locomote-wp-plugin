@@ -3,22 +3,18 @@ import apiService from "../../services/apiService";
 import Step4List from "./Step4List";
 import Step4Success from "./Step4Success";
 
-export default function Step4() {
+export default function Step4({ username, webUrl }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  const [message, setMessage] = useState(null);
   const [scheduleStarted, setScheduleStarted] = useState(false);
 
-  const username = "admin";
-  const webUrl = "http://wp-plugin-site.local";
-
-  // 🔹 Fetch all preview posts
   const fetchPreviewPosts = async () => {
     setLoading(true);
     try {
       const url = `${apiService.endpointBase}/scheduledPost/preview?username=${username}&webUrl=${webUrl}`;
+      console.log()
       const { ok, data } = await apiService.jsonFetch(url);
       if (!ok) throw new Error("Failed to load preview posts");
       setPosts(data);
@@ -34,21 +30,16 @@ export default function Step4() {
     fetchPreviewPosts();
   }, []);
 
-  // 🔹 Local edit only
   const handleFieldChange = (postId, field, value) => {
     setPosts((prev) =>
       prev.map((p) => (p.id === postId ? { ...p, [field]: value } : p))
     );
-    setMessage("💾 Local changes saved (not yet synced)");
   };
 
-  // 🔹 Start schedule → send all updates + mark success
   const handleStartSchedule = async () => {
     try {
       setSaving(true);
-      setMessage("⏳ Saving all updates and starting schedule...");
 
-      // Send all modified posts to the server
       for (const post of posts) {
         const url = `${apiService.endpointBase}/scheduledPost/${post.id}?username=${username}&webUrl=${webUrl}`;
         await apiService.jsonFetch(url, {
@@ -62,7 +53,6 @@ export default function Step4() {
         });
       }
 
-      // Start schedule
       const startUrl = `${apiService.endpointBase}/schedule/start`;
       const { ok } = await apiService.jsonFetch(startUrl, {
         method: "POST",
@@ -72,10 +62,8 @@ export default function Step4() {
 
       if (!ok) throw new Error("Failed to start schedule");
 
-      // ✅ Success → show confirmation screen
       setScheduleStarted(true);
-      setMessage("🚀 Schedule started successfully!");
-      setPosts([]); // Clear posts
+      setPosts([]);
     } catch (err) {
       console.error("Error starting schedule:", err);
       setError("Failed to save updates or start schedule.");
@@ -94,23 +82,10 @@ export default function Step4() {
     return <Step4Success />;
 
   return (
-<<<<<<< Updated upstream
-        <div className="text-center text-gray-700">Step4</div>
-      
-  );
-};
-=======
     <div className="flex flex-col gap-6">
       <h2 className="text-xl font-bold text-gray-800 text-center">
         Preview Generated Posts
       </h2>
->>>>>>> Stashed changes
-
-      {message && (
-        <div className="text-center text-sm text-blue-600 font-medium">
-          {message}
-        </div>
-      )}
 
       <Step4List posts={posts} onFieldChange={handleFieldChange} />
 

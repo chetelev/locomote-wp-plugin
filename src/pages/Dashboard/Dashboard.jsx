@@ -208,8 +208,8 @@ const Dashboard = () => {
                     />
                     <div className="mt-8 flex items-center justify-center gap-3">
                         <button onClick={goPrev} className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-blue-600 hover:bg-gray-50">Back</button>
-                        <button onClick={onAddTask} disabled={isLoading} className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-700 disabled:bg-gray-300">
-                            {/* <button onClick={goNext} disabled={isLoading} className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-700 disabled:bg-gray-300"> */}
+                        {/* <button onClick={onAddTask} disabled={isLoading} className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-700 disabled:bg-gray-300"> */}
+                            <button onClick={goNext} disabled={isLoading} className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-700 disabled:bg-gray-300">
                             {isLoading ? "Creating Task..." : "Create Task"}
                         </button>
                     </div>
@@ -218,7 +218,7 @@ const Dashboard = () => {
 
             {step === 4 && (
                 <section className="mx-auto mb-8 max-w-3xl rounded-xl bg-white p-12 shadow">
-                    <Step4 />
+                    <Step4 username={connectData.username} webUrl={connectData.webUrl} />
                 </section>
             )}
 
