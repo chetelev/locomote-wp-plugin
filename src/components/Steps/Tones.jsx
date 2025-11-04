@@ -13,11 +13,15 @@ export default function Tones({ onFieldChange, selectedTone }) {
         const url = `${apiService.endpointBase}/preferences/get/tones`;
         const { ok, data, status } = await apiService.jsonFetch(url);
 
-        if (!ok) {
-          throw new Error(`Failed to load tones (status ${status})`);
-        }
+        if (!ok) throw new Error(`Failed to load tones (status ${status})`);
 
         setTones(data);
+
+        if (data?.length > 0 && !selectedTone) {
+          onFieldChange({
+            target: { name: "toneId", value: data[0].id },
+          });
+        }
       } catch (err) {
         console.error("Error fetching tones:", err);
         setError("Failed to load tones. Please try again.");
@@ -27,7 +31,7 @@ export default function Tones({ onFieldChange, selectedTone }) {
     };
 
     fetchTones();
-  }, []);
+  }, [selectedTone, onFieldChange]);
 
   if (loading)
     return (
