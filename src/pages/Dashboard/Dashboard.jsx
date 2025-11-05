@@ -197,7 +197,7 @@ const Dashboard = () => {
                     <div className="mt-8 flex items-center justify-center gap-3">
                         <button onClick={goPrev} className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-blue-600 hover:bg-gray-50">Back</button>
                         <button onClick={onAddTask} disabled={isLoading} className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-700 disabled:bg-gray-300">
-                            {isLoading ? "Creating Task..." : "Create Task"}
+                            {isLoading ? "Creating Task..." : "Create Tasks"}
                         </button>
                     </div>
                 </section>
