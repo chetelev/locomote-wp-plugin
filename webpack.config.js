@@ -1,4 +1,6 @@
 const path = require("path");
+const webpack = require("webpack");
+require("dotenv").config();
 
 module.exports = (env, argv) => {
   const mode = argv.mode || "development";
@@ -31,25 +33,25 @@ module.exports = (env, argv) => {
           test: /\.css$/i,
           use: [
             "style-loader",
-            {
-              loader: "css-loader",
-              options: { importLoaders: 1 },
-            },
-            {
-              loader: "postcss-loader",
-            },
+            { loader: "css-loader", options: { importLoaders: 1 } },
+            { loader: "postcss-loader" },
           ],
         },
-
         {
           test: /\.svg$/i,
           issuer: /\.[jt]sx?$/,
-          use: ['@svgr/webpack'],
+          use: ["@svgr/webpack"],
         },
       ],
     },
     resolve: {
       extensions: [".js", ".jsx"],
     },
+
+    plugins: [
+      new webpack.DefinePlugin({
+        "process.env.API_URL": JSON.stringify(process.env.API_URL),
+      }),
+    ],
   };
 };

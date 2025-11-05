@@ -17,7 +17,7 @@ const Step3 = ({
         </svg>
       </div>
       <h3 className="mb-3 text-center text-xl font-semibold text-gray-900">Task Details</h3>
-      <p className="mx-auto mb-8 max-w-[450px] text-center text-sm leading-6 text-gray-500">
+      <p className="mb-8 text-center text-sm leading-6 text-gray-500">
         Specify the topics and keywords for your automated publishing task.
       </p>
 

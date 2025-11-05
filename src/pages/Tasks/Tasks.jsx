@@ -4,7 +4,6 @@ import useConnection from '../../hooks/useConnection';
 import useStatusLog from '../../hooks/useStatusLog';
 import TasksTable from '../../components/Tasks/TasksTable';
 import TasksHeader from '../../components/Tasks/TasksHeader';
-// Tailwind styles replace previous CSS files
 
 export default function Tasks() {
   const { addStatus } = useStatusLog();
@@ -42,7 +41,6 @@ export default function Tasks() {
         setTasks(tasksArray);
       } else {
         setError('Failed to load tasks');
-        addStatus('Failed to load tasks');
       }
     } catch (error) {
       console.error('Error loading tasks:', error);
@@ -53,8 +51,6 @@ export default function Tasks() {
   };
 
   const handleCancel = async (taskId, userId) => {
-    addStatus(`Canceling task ${taskId}...`);
-
     try {
       const response = await taskService.cancelTask(
         taskId,
@@ -64,7 +60,6 @@ export default function Tasks() {
       );
 
       if (response.ok) {
-        addStatus('Task canceled successfully');
         loadTasks(); 
       } else {
         addStatus(response.message || 'Failed to cancel task');
