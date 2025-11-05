@@ -12,7 +12,6 @@ const SelectField = ({
   return (
     <div className={`mb-6 ${className}`}>
       <label className="mb-2 block text-sm font-semibold text-gray-700">
-        {label} {required && <span className="text-red-500">*</span>}
       </label>
       <select
         name={name}

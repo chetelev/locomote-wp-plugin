@@ -32,7 +32,6 @@ export const generateAppPassword = async () => {
 
 export const registerConnection = async (creds) => {
   const url = `${api.endpointBase}/connect`;
-  console.log("🔗 Registering connection:", creds);
 
   const payload = {
     webUrl: creds.webUrl,
@@ -54,7 +53,6 @@ export const registerConnection = async (creds) => {
   }
 
   const data = await res.json();
-  console.log("✅ Connection registered successfully:", data);
   return data;
 };
 
@@ -65,7 +63,6 @@ export const checkStatus = async ({ username, webUrl }) => {
 
   const qs = new URLSearchParams({ username, webUrl }).toString();
   const url = `${api.endpointBase}/connect/status?${qs}`;
-  console.log("🔍 Checking connection status:", url);
 
   const res = await fetch(url, { method: "GET", credentials: "include" });
 
@@ -76,7 +73,6 @@ export const checkStatus = async ({ username, webUrl }) => {
   }
 
   const data = await res.json();
-  console.log("✅ Status check response:", data);
   return data;
 };
 

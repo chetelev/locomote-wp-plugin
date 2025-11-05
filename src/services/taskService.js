@@ -8,7 +8,6 @@ const startSchedule = async (payload) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
         });
-        console.log('Schedule - Response:', { ok, status, data });
         return { ok, message: data?.message, data };
     } catch (error) {
         console.error('Schedule - Error:', error);
@@ -43,8 +42,7 @@ const getTasks = async (connectData) => {
         console.error('Schedule - Get Tasks Error:', error);
         return { ok: false, data: null, status: 500 };
     }
-};
-
+}; 
 
 const cancelTask = async (id, userId, username, webUrl) => {
   const url = `${api.endpointBase}/scheduledPost/cancel`;
@@ -54,7 +52,7 @@ const cancelTask = async (id, userId, username, webUrl) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        id: id, // postID
+        id: id, 
         userId,
         username,
         webUrl

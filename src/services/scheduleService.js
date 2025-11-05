@@ -4,7 +4,6 @@ const generateSchedule = async ({ username, webUrl, topics, toneId = null }) => 
     const url = `${api.endpointBase}/schedule/generate`;
 
     try {
-        console.log("Sending schedule generation request:", { username, webUrl, topics, toneId });
 
         const res = await fetch(url, {
             method: "POST",
@@ -14,7 +13,6 @@ const generateSchedule = async ({ username, webUrl, topics, toneId = null }) => 
         });
 
         const data = await res.json().catch(() => ({}));
-        console.log("Schedule generation response:", data);
 
         if (!res.ok) {
             console.error("Failed to generate schedule:", data);
@@ -34,7 +32,6 @@ const generateSchedule = async ({ username, webUrl, topics, toneId = null }) => 
     }
 };
 
-// GET only PREVIEW posts
 const getPreviewPosts = async ({ username, webUrl }) => {
     const qs = new URLSearchParams({
         username,
@@ -51,12 +48,11 @@ const getPreviewPosts = async ({ username, webUrl }) => {
         }
         return { ok: true, status: res.status, data };
     } catch (err) {
-        console.error("🔥 getPreviewPosts error:", err);
+        console.error("getPreviewPosts error:", err);
         return { ok: false, status: 500, message: err.message, data: [] };
     }
 };
 
-// UPDATE a scheduled (preview) post
 const updatePost = async (postId, { username, webUrl, title, description, publishDate }) => {
     const url = `${api.endpointBase}/scheduledPost/${postId}?username=${encodeURIComponent(username)}&webUrl=${encodeURIComponent(webUrl)}`;
     try {
@@ -72,7 +68,7 @@ const updatePost = async (postId, { username, webUrl, title, description, publis
         }
         return { ok: true, status: res.status, message: data?.message || "Post updated", data };
     } catch (err) {
-        console.error("🔥 updatePost error:", err);
+        console.error("updatePost error:", err);
         return { ok: false, status: 500, message: err.message, data: null };
     }
 };

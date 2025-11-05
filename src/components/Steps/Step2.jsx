@@ -1,12 +1,8 @@
 import React from 'react';
-import SelectField from '../Dashboard/fields/SelectField'; // adjust path if needed
+import SelectField from '../Dashboard/fields/SelectField';
 
-const Step2 = ({
-    formData,
-    onFieldChange,
-    onDayChange,
-    publishStatusOptions
-}) => {
+const Step2 = ({ formData, onFieldChange, onDayChange, publishStatusOptions, errors }) => {
+
     const days = [
         { key: 'monday', label: 'Monday' },
         { key: 'tuesday', label: 'Tuesday' },
@@ -26,12 +22,16 @@ const Step2 = ({
                 </svg>
             </div>
             <h3 className="mb-3 text-center text-xl font-semibold text-gray-900">Publishing Schedule</h3>
-            <p className="mx-auto mb-8 max-w-[450px] text-center text-sm leading-6 text-gray-500">
-                Select the days you want content to be published.
+            <p className=" mb-8 text-center text-sm leading-6 text-gray-500">
+                Choose the days when your posts should be published.
             </p>
 
             <div>
-                <label className="mb-4 block text-sm font-semibold text-gray-700">Select Days</label>
+                <label className="mb-4 text-sm font-semibold text-gray-700 flex items-center gap-1">
+                    Select Days
+                    {errors?.days && <span className="text-red-500">*</span>}
+                </label>
+
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
                     {days.map(day => (
                         <div key={day.key} className="flex items-center gap-3 rounded-lg px-4 py-3 transition hover:bg-gray-50">
@@ -51,12 +51,16 @@ const Step2 = ({
             </div>
 
             <SelectField
-                label="Publish Status"
+                label={
+                    <span className="flex items-center gap-1">
+                        Publish Status
+                    </span>
+                }
                 name="publishStatus"
                 value={formData.publishStatus}
                 onChange={onFieldChange}
                 options={publishStatusOptions}
-                required={true}
+                required
             />
 
             <div className="mt-4 flex items-center gap-3">

@@ -6,7 +6,6 @@ import Step1 from '../../components/Steps/Step1';
 import Step2 from '../../components/Steps/Step2';
 import Step3 from '../../components/Steps/Step3';
 import Step4 from '../../components/Steps/Step4';
-// Tailwind styles replace previous CSS
 import preferencesService from '../../services/preferencesService';
 import scheduleService from "../../services/scheduleService";
 
@@ -16,7 +15,9 @@ const Dashboard = () => {
     const { connectData, isConnected, isConnecting, checkStatus, handleConnect } = useConnection({ addStatus });
     const [isLoading, setIsLoading] = useState(false);
     const [previewPosts, setPreviewPosts] = useState([]);
-    const [step, setStep] = useState(1);
+    const [errors, setErrors] = useState({});
+    const [step, setStep] = useState(isConnected ? 2 : 1);
+
 
     const [formData, setFormData] = useState({
         topics: '',
@@ -39,6 +40,12 @@ const Dashboard = () => {
     ];
 
     useEffect(() => {
+        if (isConnected && step === 1) {
+            setStep(2);
+        }
+    }, [isConnected]);
+
+    useEffect(() => {
         const initCheck = async () => {
             addStatus("Initializing connection check...");
             await checkStatus();
@@ -46,15 +53,8 @@ const Dashboard = () => {
         initCheck();
     }, [checkStatus]);
 
-    useEffect(() => {
-        if (isConnected) {
-            setStep(2);
-        }
-    }, [isConnected]);
-
     const onFieldChange = (e) => {
         const { name, value, type, checked } = e.target;
-        console.log("Field changed:", name, value);
         setFormData(prev => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value
@@ -73,59 +73,45 @@ const Dashboard = () => {
     };
 
     const goNext = async () => {
+        let newErrors = {};
+
         if (step === 2) {
-            try {
-                setIsLoading(true);
-                addStatus('Saving publishing preferences...');
-
-                const dayKeyToNum = {
-                    monday: 1,
-                    tuesday: 2,
-                    wednesday: 3,
-                    thursday: 4,
-                    friday: 5,
-                    saturday: 6,
-                    sunday: 1,
-                };
-                const selectedDays = Object.entries(formData.days)
-                    .filter(([, checked]) => checked)
-                    .map(([key]) => dayKeyToNum[key]);
-
-                const payload = {
-                    username: connectData.username,
-                    webUrl: connectData.webUrl,
-                    days: Object.entries(formData.days)
-                        .filter(([, checked]) => checked)
-                        .map(([day]) =>
-                            ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
-                                .indexOf(day) + 1
-                        ),
-                    publishStatus: formData.publishStatus.toUpperCase(),
-                    startNow: formData.startImmediately
-                };
-
-
-                const { ok, data, status } = await preferencesService.savePreferences(payload);
-                console.log("Saving preferences payload:", payload);
-
-                if (!ok) {
-                    addStatus(`Failed to save preferences (status ${status}).`);
-                    setIsLoading(false);
-                    return;
-                }
-                addStatus('Preferences saved.');
-            } catch (err) {
-                addStatus(`Error saving preferences: ${err.message}`);
-                setIsLoading(false);
-                return;
+            const selectedDays = Object.values(formData.days).filter(Boolean).length;
+            if (selectedDays === 0) {
+                newErrors.days = "Select at least one publishing day.";
             }
-            setIsLoading(false);
+
+            if (!formData.publishStatus) {
+                newErrors.publishStatus = "Select a publish status.";
+            }
         }
+        if (step === 3) {
+            if (!formData.topics || formData.topics.trim().length < 3) {
+                newErrors.topics = "Please enter at least one topic or keyword.";
+            }
+        }
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            const btn = document.getElementById("next-button");
+            btn?.classList.add("animate-shake");
+            setTimeout(() => btn?.classList.remove("animate-shake"), 600);
+            return;
+        }
+
         setStep(prev => Math.min(prev + 1, 4));
     };
+
+
     const goPrev = () => setStep(prev => Math.max(prev - 1, 1));
 
     const onAddTask = async () => {
+        setFormData(prev => ({
+            ...prev,
+            topics: document.querySelector("textarea[name='topics']").value
+        }));
+
         try {
             setIsLoading(true);
             addStatus("Generating preview posts...");
@@ -133,12 +119,12 @@ const Dashboard = () => {
             const payload = {
                 username: connectData.username,
                 webUrl: connectData.webUrl,
-                topics: formData.topics,
+                topics: document.querySelector("textarea[name='topics']").value,
                 toneId: formData.toneId || null,
             };
 
             const { ok, data, message } = await scheduleService.generateSchedule(payload);
-            console.log("Schedule response:", data);
+
 
             if (!ok) {
                 addStatus(`❌ ${message}`);
@@ -164,7 +150,11 @@ const Dashboard = () => {
             <p className="mb-12 text-center text-sm text-gray-500">Set up your automated content publishing in just 3 simple steps</p>
 
             {/* Stepper UI */}
-            <DashboardStepper activeStep={step - 1} />
+            {isConnected && (
+                <DashboardStepper activeStep={step - 2} isConnected={isConnected} />
+            )}
+
+
 
             {/* Step Content */}
             {step === 1 && (
@@ -191,10 +181,19 @@ const Dashboard = () => {
                         onFieldChange={onFieldChange}
                         onDayChange={onDayChange}
                         publishStatusOptions={publishStatusOptions}
+                        errors={errors}
                     />
+
                     <div className="mt-8 flex items-center justify-center gap-3">
                         <button onClick={goPrev} className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-blue-600 hover:bg-gray-50">Back</button>
-                        <button onClick={goNext} className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-blue-700 active:scale-95 disabled:opacity-60 disabled:pointer-events-none">Next</button>
+                        <button
+                            id="next-button"
+                            onClick={goNext}
+                            className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-blue-700"
+                        >
+                            Next
+                        </button>
+
                     </div>
                 </section>
             )}
@@ -208,9 +207,8 @@ const Dashboard = () => {
                     />
                     <div className="mt-8 flex items-center justify-center gap-3">
                         <button onClick={goPrev} className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-blue-600 hover:bg-gray-50">Back</button>
-                        {/* <button onClick={onAddTask} disabled={isLoading} className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-700 disabled:bg-gray-300"> */}
-                            <button onClick={goNext} disabled={isLoading} className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-700 disabled:bg-gray-300">
-                            {isLoading ? "Creating Task..." : "Create Task"}
+                        <button onClick={onAddTask} disabled={isLoading} className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-700 disabled:bg-gray-300">
+                            {isLoading ? "Creating Task..." : "Create Tasks"}
                         </button>
                     </div>
                 </section>
