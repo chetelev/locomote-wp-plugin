@@ -27,7 +27,7 @@ const Step2 = ({ formData, onFieldChange, onDayChange, publishStatusOptions, err
             </p>
 
             <div>
-                <label className="mb-4 block text-sm font-semibold text-gray-700 flex items-center gap-1">
+                <label className="mb-4 text-sm font-semibold text-gray-700 flex items-center gap-1">
                     Select Days
                     {errors?.days && <span className="text-red-500">*</span>}
                 </label>
