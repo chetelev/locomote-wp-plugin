@@ -1,13 +1,19 @@
 import React from 'react';
 
-const steps = [
-    { number: 1, label: 'Connect', shortLabel: 'Step 1' },
-    { number: 2, label: 'Frequency', shortLabel: 'Step 2' },
-    { number: 3, label: 'Topics', shortLabel: 'Step 3' },
-    { number: 4, label: 'Preview', shortLabel: 'Step 4' }
-];
+const DashboardStepper = ({ activeStep, isConnected  }) => {
+const steps = isConnected
+        ? [
+            { number: 1, label: 'Frequency', shortLabel: 'Step 1' },
+            { number: 2, label: 'Topics', shortLabel: 'Step 2' },
+            { number: 3, label: 'Preview', shortLabel: 'Step 3' }
+        ]
+        : [
+            { number: 1, label: 'Connect', shortLabel: 'Step 1' },
+            { number: 2, label: 'Frequency', shortLabel: 'Step 2' },
+            { number: 3, label: 'Topics', shortLabel: 'Step 3' },
+            { number: 4, label: 'Preview', shortLabel: 'Step 4' }
+        ];
 
-const DashboardStepper = ({ activeStep }) => {
     return (
         <div className="mb-12 mx-auto max-w-xl">
             <div className="flex items-center justify-center gap-2">

@@ -15,8 +15,9 @@ const Dashboard = () => {
     const { connectData, isConnected, isConnecting, checkStatus, handleConnect } = useConnection({ addStatus });
     const [isLoading, setIsLoading] = useState(false);
     const [previewPosts, setPreviewPosts] = useState([]);
-    const [step, setStep] = useState(1);
     const [errors, setErrors] = useState({});
+    const [step, setStep] = useState(isConnected ? 2 : 1);
+
 
     const [formData, setFormData] = useState({
         topics: '',
@@ -39,18 +40,18 @@ const Dashboard = () => {
     ];
 
     useEffect(() => {
+        if (isConnected && step === 1) {
+            setStep(2);
+        }
+    }, [isConnected]);
+
+    useEffect(() => {
         const initCheck = async () => {
             addStatus("Initializing connection check...");
             await checkStatus();
         };
         initCheck();
     }, [checkStatus]);
-
-    useEffect(() => {
-        if (isConnected) {
-            setStep(2);
-        }
-    }, [isConnected]);
 
     const onFieldChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -149,7 +150,11 @@ const Dashboard = () => {
             <p className="mb-12 text-center text-sm text-gray-500">Set up your automated content publishing in just 3 simple steps</p>
 
             {/* Stepper UI */}
-            <DashboardStepper activeStep={step - 1} />
+            {isConnected && (
+                <DashboardStepper activeStep={step - 2} isConnected={isConnected} />
+            )}
+
+
 
             {/* Step Content */}
             {step === 1 && (
