@@ -106,6 +106,11 @@ const Dashboard = () => {
     const goPrev = () => setStep(prev => Math.max(prev - 1, 1));
 
     const onAddTask = async () => {
+        setFormData(prev => ({
+            ...prev,
+            topics: document.querySelector("textarea[name='topics']").value
+        }));
+
         try {
             setIsLoading(true);
             addStatus("Generating preview posts...");
@@ -113,11 +118,12 @@ const Dashboard = () => {
             const payload = {
                 username: connectData.username,
                 webUrl: connectData.webUrl,
-                topics: formData.topics,
+                topics: document.querySelector("textarea[name='topics']").value,
                 toneId: formData.toneId || null,
             };
 
             const { ok, data, message } = await scheduleService.generateSchedule(payload);
+
 
             if (!ok) {
                 addStatus(`❌ ${message}`);
