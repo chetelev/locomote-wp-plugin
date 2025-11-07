@@ -1,8 +1,8 @@
-const PREFS_BASE = 'http://localhost:3000';
+import api from "./apiService";
 
 export const savePreferences = async (payload) => {
 
-  const res = await fetch(`${PREFS_BASE}/api/preferences`, {
+  const res = await fetch(`${api.endpointBase}/preferences`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json"

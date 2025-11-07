@@ -22,6 +22,7 @@ const Dashboard = () => {
     const [formData, setFormData] = useState({
         topics: '',
         publishStatus: 'publish',
+        language: '',
         days: {
             monday: false,
             tuesday: false,
@@ -76,18 +77,35 @@ const Dashboard = () => {
         let newErrors = {};
 
         if (step === 2) {
-            const selectedDays = Object.values(formData.days).filter(Boolean).length;
-            if (selectedDays === 0) {
-                newErrors.days = "Select at least one publishing day.";
-            }
+            const selectedDays = Object.keys(formData.days)
+                .filter(day => formData.days[day])
+                .map(day => {
+                    const indexMap = {
+                        monday: 1,
+                        tuesday: 2,
+                        wednesday: 3,
+                        thursday: 4,
+                        friday: 5,
+                        saturday: 6,
+                        sunday: 7
+                    };
+                    return indexMap[day];
+                });
 
-            if (!formData.publishStatus) {
-                newErrors.publishStatus = "Select a publish status.";
-            }
-        }
-        if (step === 3) {
-            if (!formData.topics || formData.topics.trim().length < 3) {
-                newErrors.topics = "Please enter at least one topic or keyword.";
+            const payload = {
+                username: connectData.username,
+                webUrl: connectData.webUrl,
+                days: selectedDays,
+                publishStatus: formData.publishStatus.toUpperCase(),
+                startNow: formData.startImmediately,
+                language: formData.language || null,
+            };
+
+
+            const { ok } = await preferencesService.savePreferences(payload);
+            if (!ok) {
+                setErrors({ api: "Failed to save preferences" });
+                return;
             }
         }
 

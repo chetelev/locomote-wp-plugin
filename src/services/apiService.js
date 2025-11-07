@@ -1,4 +1,4 @@
-const endpointBase = process.env.API_URL;
+const endpointBase = process.env.API_BASE || "https://api.idyzer.com/api";
 
 const jsonFetch = async (url, opts = {}) => {
     

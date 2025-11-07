@@ -1,5 +1,6 @@
 import React from 'react';
 import SelectField from '../Dashboard/fields/SelectField';
+import { languages } from '../../config/languages';
 
 const Step2 = ({ formData, onFieldChange, onDayChange, publishStatusOptions, errors }) => {
 
@@ -51,15 +52,20 @@ const Step2 = ({ formData, onFieldChange, onDayChange, publishStatusOptions, err
             </div>
 
             <SelectField
-                label={
-                    <span className="flex items-center gap-1">
-                        Publish Status
-                    </span>
-                }
                 name="publishStatus"
                 value={formData.publishStatus}
                 onChange={onFieldChange}
                 options={publishStatusOptions}
+                required
+            />
+
+            <SelectField
+                name="language"
+                value={formData.language}
+                onChange={onFieldChange}
+                options={languages}
+                label="Content Language"
+                placeholder="Select a language"
                 required
             />
 

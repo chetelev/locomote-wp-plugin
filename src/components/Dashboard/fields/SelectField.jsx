@@ -11,7 +11,7 @@ const SelectField = ({
 }) => {
   return (
     <div className={`mb-6 ${className}`}>
-      <label className="mb-2 block text-sm font-semibold text-gray-700">
+      <label className="mb-2 block text-sm font-semibold text-gray-700">Publish Status
       </label>
       <select
         name={name}
