@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 const endpointBase = process.env.API_URL;
-=======
-const endpointBase = process.env.API_BASE ;
->>>>>>> Stashed changes
 
 const jsonFetch = async (url, opts = {}) => {
     
