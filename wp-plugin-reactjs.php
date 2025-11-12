@@ -150,6 +150,22 @@ function dro_enqueue_script() {
     ) ); 
 }
 
+add_action('init', function () {
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    if ($origin) {
+        header("Access-Control-Allow-Origin: $origin");
+    }
+
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        status_header(200);
+        exit;
+    }
+});
+
 /**
  * AJAX: Generate or fetch an Application Password named "locomote_app" for the current user
  */

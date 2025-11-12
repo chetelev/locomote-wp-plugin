@@ -50,6 +50,7 @@
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "lucide-react": "^0.552.0",
-    "react-datepicker": "^8.8.0"
+    "react-datepicker": "^8.8.0",
+    "react-select": "^5.10.2"
   }
 }
