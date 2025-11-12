@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import apiService from "../../services/apiService";
 
-export default function Tones({ onFieldChange, selectedTone }) {
+function Tones({ onFieldChange, selectedTone }) {
   const [tones, setTones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,7 +31,14 @@ export default function Tones({ onFieldChange, selectedTone }) {
     };
 
     fetchTones();
-  }, [selectedTone, onFieldChange]);
+  }, []);
+
+  const handleToneSelect = useCallback(
+    (toneId) => {
+      onFieldChange({ target: { name: "toneId", value: toneId } });
+    },
+    [onFieldChange]
+  );
 
   if (loading)
     return (
@@ -57,9 +64,7 @@ export default function Tones({ onFieldChange, selectedTone }) {
         {tones.map((tone) => (
           <div
             key={tone.id}
-            onClick={() =>
-              onFieldChange({ target: { name: "toneId", value: tone.id } })
-            }
+            onClick={() => handleToneSelect(tone.id)}
             className={`flex flex-col items-center cursor-pointer transition-all duration-200 rounded-2xl p-3 border ${
               selectedTone === tone.id
                 ? "border-blue-500 ring-4 ring-blue-200 bg-blue-50 scale-105"
@@ -86,3 +91,5 @@ export default function Tones({ onFieldChange, selectedTone }) {
     </div>
   );
 }
+
+export default React.memo(Tones);

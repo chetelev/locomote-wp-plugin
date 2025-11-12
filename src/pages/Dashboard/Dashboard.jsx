@@ -22,9 +22,10 @@ const Dashboard = () => {
     const [formData, setFormData] = useState({
         topics: '',
         publishStatus: 'publish',
+        language: 'English',
         days: {
-            monday: false,
-            tuesday: false,
+            monday: true,
+            tuesday: true,
             wednesday: false,
             thursday: false,
             friday: false,
@@ -76,18 +77,39 @@ const Dashboard = () => {
         let newErrors = {};
 
         if (step === 2) {
-            const selectedDays = Object.values(formData.days).filter(Boolean).length;
-            if (selectedDays === 0) {
-                newErrors.days = "Select at least one publishing day.";
+            const selectedDays = Object.keys(formData.days)
+                .filter(day => formData.days[day])
+                .map(day => {
+                    const indexMap = {
+                        monday: 1,
+                        tuesday: 2,
+                        wednesday: 3,
+                        thursday: 4,
+                        friday: 5,
+                        saturday: 6,
+                        sunday: 7
+                    };
+                    return indexMap[day];
+                });
+
+            if (selectedDays.length === 0) {
+                newErrors.days = "Please select at least one publishing day.";
             }
 
-            if (!formData.publishStatus) {
-                newErrors.publishStatus = "Select a publish status.";
-            }
-        }
-        if (step === 3) {
-            if (!formData.topics || formData.topics.trim().length < 3) {
-                newErrors.topics = "Please enter at least one topic or keyword.";
+            if (Object.keys(newErrors).length === 0) {
+                const payload = {
+                    username: connectData.username,
+                    webUrl: connectData.webUrl,
+                    days: selectedDays,
+                    publishStatus: formData.publishStatus.toUpperCase(),
+                    startNow: formData.startImmediately,
+                    language: formData.language,
+                };
+
+                const { ok } = await preferencesService.savePreferences(payload);
+                if (!ok) {
+                    newErrors.api = "Failed to save preferences.";
+                }
             }
         }
 
@@ -102,6 +124,7 @@ const Dashboard = () => {
 
         setStep(prev => Math.min(prev + 1, 4));
     };
+
 
 
     const goPrev = () => setStep(prev => Math.max(prev - 1, 1));
@@ -146,19 +169,17 @@ const Dashboard = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 px-5 py-14">
-            <h1 className="text-center text-2xl font-bold text-gray-900">Locomote</h1>
-            <p className="mb-12 text-center text-sm text-gray-500">Set up your automated content publishing in just 3 simple steps</p>
+            <h1 className="m-0! text-center text-2xl font-bold text-gray-900">Locomote</h1>
+            <p className="mb-12! mt-0! text-center text-sm text-gray-500">Set up your automated content publishing in just 3 simple steps</p>
 
             {/* Stepper UI */}
             {isConnected && (
                 <DashboardStepper activeStep={step - 2} isConnected={isConnected} />
             )}
 
-
-
             {/* Step Content */}
             {step === 1 && (
-                <section className="mx-auto mb-8 max-w-3xl rounded-xl bg-white p-12 shadow">
+                <section className="mx-auto max-w-3xl rounded-xl bg-white p-12 shadow">
                     <Step1
                         addStatus={addStatus}
                         connectData={connectData}
