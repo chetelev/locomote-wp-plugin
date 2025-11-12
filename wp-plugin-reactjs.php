@@ -1,34 +1,35 @@
 <?php
 /**
- * Plugin Name: WordPress Plugin ReactJS
- * Plugin URI: https://github.com/younes-dro/wp-plugin-reactjs
- * Description: A WordPress Plugin starter for developers who want to use ReactJS in the development of WordPress Plugins.
- * Version:1.0.0
- * Author: Younes DRO
- * Author URI: https://github.com/younes-dro/
- * License: GPL-2.0+
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: dro-wp-plugin-reactjs
+ * Plugin Name: Locomote
+ * Plugin URI: https://locomote.io/
+ * Description: Simple to use WordPress plugin that automates your content creation, scheduling, and publishing. All in one place.
+ * Version: 1.0.0
+ * Author: Diffusal
+ * Author URI: https://diffusal.io/
+ * License: Proprietary (Commercial)
+ * License URI: https://locomote.io/license
+ * Text Domain: locomote
  * Domain Path: /languages
  *
- * @package WP_Plugin_ReactJS
+ * @package Locomote
  */
 
 /*
-	Copyright 2019 Younes DRO (email : younesdro at gmail.com)
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+	Copyright © 2025 GIIKI DOOEL
+	All rights reserved.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+	This software is developed and owned by GIIKI DOOEL Macedonia.
+	It is licensed for use under the Locomote Terms of Service and End User License Agreement (EULA).
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+	You may use this software in accordance with your active plan or subscription tier (including the free tier).
+	Unauthorized redistribution, resale, modification, or reverse engineering of this plugin or any part of its
+	source code is strictly prohibited without explicit written permission from GIIKI DOOEL.
+
+	This software is provided “as is” without any express or implied warranty. GIIKI DOOEL shall not be liable
+	for any damages arising from the use of this software.
+
+	For licensing information, visit: https://locomote.io/license
+	For support, contact: contact@diffusal.io
 */
 
 // Make sure we don't expose any info if called directly.
