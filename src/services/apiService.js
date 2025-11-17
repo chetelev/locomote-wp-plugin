@@ -1,4 +1,4 @@
-const endpointBase = process.env.API_BASE || "http://3.224.136.158:3000/api";
+const endpointBase = process.env.API_BASE || "https://api.locomote.io/api";
 
 const jsonFetch = async (url, opts = {}) => {
     
