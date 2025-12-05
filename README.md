@@ -4,7 +4,7 @@ Contributors: dimitarchetelev
 Tags: ai, automation, blog, scheduling, content creation
 Requires at least: 6.0
 Tested up to: 6.8
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -69,11 +69,19 @@ Locomote does not collect or sell user data.
 
 == Changelog ==
 
+= 1.0.1 =
+
+- Fixed issue where the dashboard modal could not scroll.
+- Fixed the "Go to Tasks" button not working properly.
+
 = 1.0.0 =
 
 - Initial release
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+This update fixes a no-scroll UI issue and repairs the "Go to Tasks" button functionality.
 
 = 1.0.0 =
 First public version of Locomote AI Content Automation.
