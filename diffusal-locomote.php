@@ -3,7 +3,7 @@
  * Plugin Name: Locomote by Diffusal - AI Content Automation
  * Plugin URI: https://locomote.io/
  * Description: Simple to use WordPress plugin that automates your content creation, scheduling, and publishing. All in one place.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Diffusal
  * Author URI: https://diffusal.io/
  * License: GPLv2 or later

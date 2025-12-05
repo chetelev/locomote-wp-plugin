@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Step4Success() {
   const handleGoToTasks = () => {
-    window.location.href = `${window.location.origin}/wp-admin/admin.php?page=dro-wp-plugin-tasks`;
+    window.location.href = `${window.location.origin}/wp-admin/admin.php?page=diffusal-locomote-tasks`;
   };
 
   return (
