@@ -1,36 +1,36 @@
 <?php
 /**
- * Plugin Name: Locomote by Diffusal – AI Content Automation
+ * Plugin Name: Locomote by Diffusal - AI Content Automation
  * Plugin URI: https://locomote.io/
  * Description: Simple to use WordPress plugin that automates your content creation, scheduling, and publishing. All in one place.
  * Version: 1.0.0
  * Author: Diffusal
  * Author URI: https://diffusal.io/
- * License: Proprietary (Commercial)
- * License URI: https://locomote.io/license
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: diffusal-locomote
- * Domain Path: /languages
  *
  * @package Locomote
  */
 
-/*
-	Copyright © 2025 GIIKI DOOEL
-	All rights reserved.
+ /*
+ * Locomote by Diffusal - AI Content Automation
+ * Copyright (c) 2025 GIIKI DOOEL
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see https://www.gnu.org/licenses/.
+ */
 
-	This software is developed and owned by GIIKI DOOEL Macedonia.
-	It is licensed for use under the Locomote Terms of Service and End User License Agreement (EULA).
-
-	You may use this software in accordance with your active plan or subscription tier (including the free tier).
-	Unauthorized redistribution, resale, modification, or reverse engineering of this plugin or any part of its
-	source code is strictly prohibited without explicit written permission from GIIKI DOOEL.
-
-	This software is provided “as is” without any express or implied warranty. GIIKI DOOEL shall not be liable
-	for any damages arising from the use of this software.
-
-	For licensing information, visit: https://locomote.io/license
-	For support, contact: contact@diffusal.io
-*/
 
 // Make sure we don't expose any info if called directly.
 if ( ! function_exists( 'add_action' ) ) {
@@ -151,21 +151,28 @@ function locomote_enqueue_script() {
     ) ); 
 }
 
-    add_action('init', function () {
-    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-    if ($origin) {
-        header("Access-Control-Allow-Origin: $origin");
+add_action('init', function () {
+
+    $origin = '';
+    if ( isset( $_SERVER['HTTP_ORIGIN'] ) ) {
+        $origin = sanitize_text_field( wp_unslash( $_SERVER['HTTP_ORIGIN'] ) );
+        header( "Access-Control-Allow-Origin: $origin" );
     }
 
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-    header("Access-Control-Allow-Credentials: true");
-    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+    header( "Access-Control-Allow-Methods: GET, POST, OPTIONS" );
+    header( "Access-Control-Allow-Credentials: true" );
+    header( "Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With" );
 
-    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        status_header(200);
+    $method = isset( $_SERVER['REQUEST_METHOD'] )
+        ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) )
+        : '';
+
+    if ( $method === 'OPTIONS' ) {
+        status_header( 200 );
         exit;
     }
 });
+
 
 /**
  * AJAX: Generate or fetch an Application Password named "locomote_app" for the current user
